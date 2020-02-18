@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
-const User = require("../models/usuario");
+const bodyParser = require("body-parser");
+const UserModel = require("../models/usuario");
+
+// parse application/x-www-form-urlencoded + parse application/json
+app.use(bodyParser.urlencoded({ extended: false })).use(bodyParser.json());
 
 app.get("/usuario", function(req, res) {
     res.json("Hello World");
@@ -8,26 +12,26 @@ app.get("/usuario", function(req, res) {
 
 app.post("/usuario", function(req, res) {
     const body = req.body;
-    const usuario = new User({
-        nombre: body.nombre,
+
+    let user = new UserModel({
+        name: body.name,
         email: body.email,
-        password: body.password
+        password: body.password,
+        role: body.role
     });
 
-    usuario.save((err, usuarioDB) => {
+    user.save((err, userDB) => {
         if (err) {
-            console.log("error");
             return res.status(400).json({
-                ok: false,
-                err
-            });
-        } else {
-            console.log("true");
-            return res.json({
-                ok: true,
-                usuario: usuarioDB
+                success: false,
+                message: err
             });
         }
+        res.json({
+            success: true,
+            message: "User saved",
+            data: userDB
+        });
     });
 });
 
