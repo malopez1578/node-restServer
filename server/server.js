@@ -1,10 +1,14 @@
 require("./config/config");
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
+
+// parse application/x-www-form-urlencoded + parse application/json
+app.use(bodyParser.urlencoded({ extended: false })).use(bodyParser.json());
 app.use(require("./routes/user"));
 const monggose = require("mongoose");
 
-monggose.createConnection(
+monggose.connect(
     "mongodb://localhost:27017/cafe",
     {
         useNewUrlParser: true,
