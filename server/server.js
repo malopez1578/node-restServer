@@ -9,10 +9,11 @@ app.use(require("./routes/user"));
 const monggose = require("mongoose");
 
 monggose.connect(
-    "mongodb://localhost:27017/cafe",
+    process.env.urlDB,
     {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
     },
     (err, res) => {
         if (err) throw err;
