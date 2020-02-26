@@ -10,7 +10,7 @@ app.get("/usuario", function(req, res) {
     let limit = req.query.limit || 5;
     limit = Number(limit);
 
-    UserModel.find({}, "name email")
+    UserModel.find({ state: true }, "name email")
         .skip(from)
         .limit(limit)
         .exec((err, usuarios) => {
@@ -20,7 +20,7 @@ app.get("/usuario", function(req, res) {
                     message: err
                 });
             }
-            UserModel.countDocuments((err, count) => {
+            UserModel.countDocuments({ state: true }, (err, count) => {
                 if (err) {
                     return res.status(400).json({
                         success: false,
@@ -86,7 +86,8 @@ app.put("/usuario/:id", function(req, res) {
 });
 app.delete("/usuario/:id", function(req, res) {
     let id = req.params.id;
-    UserModel.findByIdAndRemove(id, (err, userDelete) => {
+    let changeData = { new: true, state: false };
+    UserModel.findByIdAndUpdate(id, changeData, (err, userDelete) => {
         if (err) {
             return res.status(400).json({
                 success: false,
