@@ -3,8 +3,9 @@ const app = express();
 const bcrypt = require("bcrypt");
 const _ = require("underscore");
 const UserModel = require("../models/usuario");
+const { validateToken, validateRol } = require("../middlewares/authentication");
 
-app.get("/usuario", function(req, res) {
+app.get("/usuario", validateToken, function(req, res) {
     let from = req.query.from || 0;
     from = Number(from);
     let limit = req.query.limit || 5;
@@ -36,7 +37,7 @@ app.get("/usuario", function(req, res) {
         });
 });
 
-app.post("/usuario", function(req, res) {
+app.post("/usuario", [validateToken, validateRol], function(req, res) {
     const body = req.body;
 
     let user = new UserModel({
@@ -61,7 +62,7 @@ app.post("/usuario", function(req, res) {
     });
 });
 
-app.put("/usuario/:id", function(req, res) {
+app.put("/usuario/:id", [validateToken, validateRol], function(req, res) {
     let paramId = req.params.id;
     let body = _.pick(req.body, ["name", "email", "image", "role", "state"]);
 
@@ -84,7 +85,7 @@ app.put("/usuario/:id", function(req, res) {
         }
     );
 });
-app.delete("/usuario/:id", function(req, res) {
+app.delete("/usuario/:id", [validateToken, validateRol], function(req, res) {
     let id = req.params.id;
     let changeData = { new: true, state: false };
     UserModel.findByIdAndUpdate(id, changeData, (err, userDelete) => {

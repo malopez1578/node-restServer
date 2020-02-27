@@ -5,9 +5,10 @@ const app = express();
 
 // parse application/x-www-form-urlencoded + parse application/json
 app.use(bodyParser.urlencoded({ extended: false })).use(bodyParser.json());
-app.use(require("./routes/user"));
+// configuracion de rutas
+app.use(require("./routes/index"));
 const monggose = require("mongoose");
-
+// configuracion de coneccion
 monggose.connect(
     process.env.urlDB,
     {

@@ -13,3 +13,11 @@ if (process.env.NODE_ENV === "dev") {
     urlDB = process.env.MONGO_URI;
 }
 process.env.urlDB = urlDB;
+
+// vencimiento del token
+
+process.env.caducidad = 60 * 60 * 24 * 30;
+
+// SEED del token
+
+process.env.SEED = process.env.SEED || "firma-local";
